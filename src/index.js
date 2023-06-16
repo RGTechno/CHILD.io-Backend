@@ -1,6 +1,6 @@
 import express from "express";
 
-import { ServerConfig } from "./config/config.js";
+import { ServerConfig } from "./config/index.js";
 
 const app = express();
 
