@@ -8,6 +8,7 @@ router.get("/friends", childController.getFriendsInfo);
 
 router.post("/link-parent", childController.linkParent);
 router.post("/app-usage", childController.updateAppUsage);
-router.post("/add-friend", childController.addFriend);
+router.post("/add-friend", childController.sendFriendRequest);
+router.post("/accept-friend", childController.acceptFriendRequest);
 
 module.exports = router;

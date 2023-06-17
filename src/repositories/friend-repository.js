@@ -51,6 +51,26 @@ class FriendRepository {
             throw { error };
         }
     }
+
+    async acceptFriendRequest(senderUserID, receiverUserID) {
+        try {
+            const result = await Friends.update(
+                { isAccepted: 1 },
+                {
+                    where: {
+                        userID1: senderUserID,
+                        userID2: receiverUserID,
+                    },
+                }
+            );
+
+            console.log("Friend Request Accepted Successfully");
+            return result;
+        } catch (error) {
+            console.error("Error Accepted friend request:", error);
+            throw { error };
+        }
+    }
 }
 
 module.exports = FriendRepository;
