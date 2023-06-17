@@ -36,6 +36,21 @@ class FriendRepository {
             throw { error };
         }
     }
+
+    async sendFriendRequest(senderUserID, receiverUserID) {
+        try {
+            const friend = await Friends.create({
+                userID1: senderUserID,
+                userID2: receiverUserID,
+            });
+
+            console.log("Friend Request Sent Successfully:", friend.toJSON());
+            return friend;
+        } catch (error) {
+            console.error("Error inserting friend:", error);
+            throw { error };
+        }
+    }
 }
 
 module.exports = FriendRepository;

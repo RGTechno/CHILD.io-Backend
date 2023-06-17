@@ -88,4 +88,34 @@ async function getFriendsInfo(req, res) {
     }
 }
 
-module.exports = { linkParent, getAppUsage, updateAppUsage, getFriendsInfo };
+async function addFriend(req, res) {
+    const { senderUserID, receiverUserID } = req.body;
+    try {
+        const result = await friendsRepo.sendFriendRequest(
+            senderUserID,
+            receiverUserID
+        );
+        return res
+            .status(StatusCodes.OK)
+            .json(
+                new Response(true, `Friend Request Sent Sucessfully`, result)
+            );
+    } catch (err) {
+        const {
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            error = {},
+            message = "Something went wrong",
+        } = err;
+        return res
+            .status(statusCode)
+            .json(new Response(false, message, {}, error));
+    }
+}
+
+module.exports = {
+    linkParent,
+    getAppUsage,
+    updateAppUsage,
+    getFriendsInfo,
+    addFriend,
+};
