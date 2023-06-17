@@ -1,7 +1,8 @@
+const { Op, literal } = require("sequelize");
 const db = require("../models/index.js");
 const { StatusCodes } = require("http-status-codes");
 
-const { User } = db;
+const { User, DailyActivity } = db;
 
 class ChildRepository {
     async linkParent(userID, parentID) {
@@ -24,11 +25,38 @@ class ChildRepository {
             return result;
         } catch (error) {
             console.error("Update failed:", error);
-            throw {
-                error,
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: "Something went wrong",
-            };
+            throw { error };
+        }
+    }
+
+    async getAppUsage(userID) {
+        const daysDifference = 7;
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+
+        try {
+            const result = await DailyActivity.findAll({
+                where: {
+                    userID,
+                    activityDate: {
+                        [Op.lt]: currentDate,
+                        [Op.gte]: Sequelize.literal(
+                            Sequelize.escape(
+                                Sequelize.fn(
+                                    "CURRENT_DATE - INTERVAL ? DAY",
+                                    daysDifference
+                                )
+                            )
+                        ),
+                    },
+                },
+            });
+
+            console.log("successfully fetched daily activities", result);
+            return result;
+        } catch (error) {
+            console.log("failed to fetch daily activities");
+            throw { error };
         }
     }
 }

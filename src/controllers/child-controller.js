@@ -14,7 +14,11 @@ async function linkParent(req, res) {
                 new Response(true, `Successfully Linked to Parent ${parentID}`)
             );
     } catch (err) {
-        const { statusCode, error = {}, message } = err;
+        const {
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            error = {},
+            message = "Something went wrong",
+        } = err;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));
