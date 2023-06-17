@@ -1,17 +1,17 @@
-const { ChildRepository } = require("../repositories/repositories.js");
+const { FriendRepository } = require("../repositories/repositories");
 const Response = require("../utils/response/response.js");
 const { StatusCodes } = require("http-status-codes");
 
-const childRepo = new ChildRepository();
+const friendsRepo = new FriendRepository();
 
-async function linkParent(req, res) {
-    const { parentID, userID } = req.body;
+async function getFriendsInfo(req, res) {
+    const { userID } = req.query;
     try {
-        await childRepo.linkParent(userID, parentID);
+        const result = await friendsRepo.getFriendsInfo(userID);
         return res
             .status(StatusCodes.OK)
             .json(
-                new Response(true, `Successfully Linked to Parent ${parentID}`)
+                new Response(true, `Successfully Fetched Friends Info`, result)
             );
     } catch (err) {
         const {
@@ -25,13 +25,18 @@ async function linkParent(req, res) {
     }
 }
 
-async function getAppUsage(req, res) {
-    const { userID } = req.query;
+async function sendFriendRequest(req, res) {
+    const { senderUserID, receiverUserID } = req.body;
     try {
-        const result = await childRepo.getAppUsage(userID);
+        const result = await friendsRepo.sendFriendRequest(
+            senderUserID,
+            receiverUserID
+        );
         return res
             .status(StatusCodes.OK)
-            .json(new Response(true, `Successfully Fetched App Usage`, result));
+            .json(
+                new Response(true, `Friend Request Sent Sucessfully`, result)
+            );
     } catch (err) {
         const {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
@@ -44,13 +49,22 @@ async function getAppUsage(req, res) {
     }
 }
 
-async function updateAppUsage(req, res) {
-    const { data } = req.body;
+async function acceptFriendRequest(req, res) {
+    const { senderUserID, receiverUserID } = req.body;
     try {
-        const result = await childRepo.updateAppUsage(data);
+        const result = await friendsRepo.acceptFriendRequest(
+            senderUserID,
+            receiverUserID
+        );
         return res
             .status(StatusCodes.OK)
-            .json(new Response(true, `Successfully Updated App Usage`, result));
+            .json(
+                new Response(
+                    true,
+                    "Friend Request Accepted Sucessfully",
+                    result
+                )
+            );
     } catch (err) {
         const {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
@@ -64,7 +78,7 @@ async function updateAppUsage(req, res) {
 }
 
 module.exports = {
-    linkParent,
-    getAppUsage,
-    updateAppUsage,
+    getFriendsInfo,
+    sendFriendRequest,
+    acceptFriendRequest,
 };
