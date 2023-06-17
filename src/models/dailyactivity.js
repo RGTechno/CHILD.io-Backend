@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
                 },
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
-                primaryKey: true,
             },
             activityDate: DataTypes.DATEONLY,
             app: DataTypes.STRING,
@@ -30,6 +29,12 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             modelName: "DailyActivity",
+            indexes: [
+                {
+                    unique: false,
+                    fields: ["userID", "activityDate", "app"],
+                },
+            ],
         }
     );
     return DailyActivity;
