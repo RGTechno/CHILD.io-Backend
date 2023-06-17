@@ -3,6 +3,11 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("DailyActivities", {
+            id: {
+                type: Sequelize.INTEGER,
+                autoIncrement: true,
+                primaryKey: true,
+            },
             userID: {
                 type: Sequelize.INTEGER,
                 references: {
@@ -20,6 +25,11 @@ module.exports = {
             },
             duration: {
                 type: Sequelize.INTEGER,
+            },
+            createdAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
             },
             updatedAt: {
                 allowNull: false,

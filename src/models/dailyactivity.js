@@ -1,22 +1,23 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
     class DailyActivity extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
         static associate(models) {
             // define association here
         }
     }
     DailyActivity.init(
         {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
             userID: {
                 type: DataTypes.INTEGER,
                 references: {
-                    model: "User",
+                    model: "Users",
                     key: "userID",
                 },
                 onUpdate: "CASCADE",
@@ -25,13 +26,18 @@ module.exports = (sequelize, DataTypes) => {
             activityDate: DataTypes.DATEONLY,
             app: DataTypes.STRING,
             duration: DataTypes.INTEGER,
+            updatedAt: {
+                allowNull: false,
+                type: DataTypes.DATE,
+                defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
+            },
         },
         {
             sequelize,
             modelName: "DailyActivity",
             indexes: [
                 {
-                    unique: false,
+                    unique: true,
                     fields: ["userID", "activityDate", "app"],
                 },
             ],
