@@ -15,6 +15,7 @@ module.exports = {
                 password: faker.internet.password(),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                parentId: i ? Math.floor(Math.random() * i) + 1 : null,
             };
             users.push(user);
         }
