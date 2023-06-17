@@ -38,11 +38,11 @@ module.exports = {
             },
         });
 
-        await queryInterface.addIndex("DailyActivities", [
-            "userID",
-            "activityDate",
-            "app",
-        ]);
+        await queryInterface.addIndex("DailyActivities", {
+            fields: ["userID", "activityDate", "app"],
+            name: "unique_user_activity_app",
+            unique: true,
+        });
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable("DailyActivities");

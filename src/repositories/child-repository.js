@@ -1,6 +1,7 @@
-const { Op, literal } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const db = require("../models/index.js");
 const { StatusCodes } = require("http-status-codes");
+const Logger = require("../config/logger-config.js");
 
 const { User, DailyActivity } = db;
 
@@ -30,32 +31,35 @@ class ChildRepository {
     }
 
     async getAppUsage(userID) {
-        const daysDifference = 7;
-        const currentDate = new Date();
-        currentDate.setHours(0, 0, 0, 0);
-
         try {
             const result = await DailyActivity.findAll({
                 where: {
                     userID,
                     activityDate: {
-                        [Op.lt]: currentDate,
-                        [Op.gte]: Sequelize.literal(
-                            Sequelize.escape(
-                                Sequelize.fn(
-                                    "CURRENT_DATE - INTERVAL ? DAY",
-                                    daysDifference
-                                )
-                            )
-                        ),
+                        [Op.eq]: Sequelize.literal("CURDATE()"),
                     },
                 },
             });
-
-            console.log("successfully fetched daily activities", result);
+            Logger.log("info", result);
+            console.log("successfully fetched daily activities");
             return result;
         } catch (error) {
             console.log("failed to fetch daily activities");
+            Logger.log("error", error);
+            throw { error };
+        }
+    }
+
+    async updateAppUsage(data) {
+        try {
+            const result = await DailyActivity.bulkCreate(data, {
+                updateOnDuplicate: ["duration", "updatedAt"],
+            });
+            console.log("Data inserted or updated successfully.");
+            return result;
+        } catch (error) {
+            console.error("Error occurred:", error);
+            Logger.log("error", error);
             throw { error };
         }
     }
