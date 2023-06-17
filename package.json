@@ -6,12 +6,12 @@
     "scripts": {
         "dev": "npx nodemon src/index.js"
     },
-    "type": "module",
     "author": "Dhruv Pasricha",
     "license": "ISC",
     "dependencies": {
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
+        "faker": "^5.5.3",
         "http-status-codes": "^2.2.0",
         "mysql2": "^3.2.4",
         "nodemon": "^2.0.22",

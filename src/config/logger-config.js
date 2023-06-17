@@ -1,4 +1,4 @@
-import { createLogger, format, transports } from "winston";
+const { createLogger, format, transports } = require("winston");
 
 const { combine, timestamp, prettyPrint, printf } = format;
 
@@ -15,4 +15,4 @@ const logger = createLogger({
     prettyPrint,
 });
 
-export default logger;
+module.exports = logger;

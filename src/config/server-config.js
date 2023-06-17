@@ -1,9 +1,9 @@
-import { config } from "dotenv";
+const { config } = require("dotenv");
 
 config();
 
 const PORT = process.env.PORT;
 
-export const ServerConfig = {
+exports.ServerConfig = {
     PORT,
 };
