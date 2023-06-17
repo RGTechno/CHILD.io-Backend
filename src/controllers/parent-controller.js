@@ -23,4 +23,25 @@ async function incentiviseChild(req, res) {
     }
 }
 
-module.exports = { incentiviseChild };
+async function getChildren(req, res) {
+    const { userID } = req.query;
+    try {
+        const children = await parentRepo.getChildren(userID);
+        return res
+            .status(StatusCodes.OK)
+            .json(
+                new Response(true, `Successfully Fetched Children`, children)
+            );
+    } catch (err) {
+        const {
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            error = {},
+            message = "Something went wrong",
+        } = err;
+        return res
+            .status(statusCode)
+            .json(new Response(false, message, {}, error));
+    }
+}
+
+module.exports = { incentiviseChild, getChildren };

@@ -1,6 +1,6 @@
 const db = require("../models/index.js");
 
-const { ChildIncentive } = db;
+const { User, ChildIncentive } = db;
 
 class ParentRepository {
     async insertChildIncentive(userID, coins) {
@@ -13,6 +13,20 @@ class ParentRepository {
             return result;
         } catch (error) {
             console.error("Error inserting Child Incentive:", error);
+            throw { error };
+        }
+    }
+    async getChildren(userID) {
+        try {
+            const result = await User.findAll({
+                where: {
+                    parentID: userID,
+                },
+            });
+            console.log("Sucessfully Fetched Children:", result);
+            return result;
+        } catch (error) {
+            console.error("Error Fetching Children:", error);
             throw { error };
         }
     }
