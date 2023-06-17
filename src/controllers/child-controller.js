@@ -1,8 +1,12 @@
-const { ChildRepository } = require("../repositories/repositories.js");
+const {
+    ChildRepository,
+    FriendRepository,
+} = require("../repositories/repositories.js");
 const Response = require("../utils/response/response.js");
 const { StatusCodes } = require("http-status-codes");
 
 const childRepo = new ChildRepository();
+const friendsRepo = new FriendRepository();
 
 async function linkParent(req, res) {
     const { parentID, userID } = req.body;
@@ -63,4 +67,25 @@ async function updateAppUsage(req, res) {
     }
 }
 
-module.exports = { linkParent, getAppUsage, updateAppUsage };
+async function getFriendsInfo(req, res) {
+    const { userID } = req.query;
+    try {
+        const result = await friendsRepo.getFriendsInfo(userID);
+        return res
+            .status(StatusCodes.OK)
+            .json(
+                new Response(true, `Successfully Fetched Friends Info`, result)
+            );
+    } catch (err) {
+        const {
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            error = {},
+            message = "Something went wrong",
+        } = err;
+        return res
+            .status(statusCode)
+            .json(new Response(false, message, {}, error));
+    }
+}
+
+module.exports = { linkParent, getAppUsage, updateAppUsage, getFriendsInfo };

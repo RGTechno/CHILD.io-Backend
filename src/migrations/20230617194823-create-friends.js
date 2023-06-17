@@ -32,6 +32,12 @@ module.exports = {
                 defaultValue: false,
             },
         });
+
+        await queryInterface.addConstraint("Friends", {
+            fields: ["userID1", "userID2"],
+            type: "unique",
+            name: "unique_userID_pair",
+        });
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable("Friends");
