@@ -3,7 +3,7 @@ const db = require("../models/index.js");
 const { StatusCodes } = require("http-status-codes");
 const Logger = require("../config/logger-config.js");
 
-const { User, DailyActivity } = db;
+const { User, DailyActivity, ChildIncentive } = db;
 
 class ChildRepository {
     async linkParent(userID, parentID) {
@@ -60,6 +60,21 @@ class ChildRepository {
         } catch (error) {
             console.error("Error occurred:", error);
             Logger.log("error", error);
+            throw { error };
+        }
+    }
+
+    async getCoins(userID) {
+        try {
+            const result = await ChildIncentive.sum("coinsEarned", {
+                where: {
+                    userID,
+                },
+            });
+            console.log("Data inserted or updated successfully.");
+            return result;
+        } catch (error) {
+            console.log(error);
             throw { error };
         }
     }

@@ -63,8 +63,32 @@ async function updateAppUsage(req, res) {
     }
 }
 
+async function getCoins(req, res) {
+    const { userID } = req.query;
+    try {
+        const result = await childRepo.getCoins(userID);
+        return res
+            .status(StatusCodes.OK)
+            .json(
+                new Response(true, `Successfully Fetched Coins`, {
+                    coins: result,
+                })
+            );
+    } catch (err) {
+        const {
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            error = {},
+            message = "Something went wrong",
+        } = err.error;
+        return res
+            .status(statusCode)
+            .json(new Response(false, message, {}, error));
+    }
+}
+
 module.exports = {
     linkParent,
     getAppUsage,
     updateAppUsage,
+    getCoins,
 };
