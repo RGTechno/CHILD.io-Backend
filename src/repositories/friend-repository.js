@@ -9,25 +9,40 @@ class FriendRepository {
         try {
             const friends = await Friends.findAll({
                 attributes: ["userID1", "userID2", "isAccepted"],
+                include: [
+                    {
+                        model: User,
+                        as: "user1",
+                        attributes: ["userID", "firstName", "lastName"],
+                    },
+                    {
+                        model: User,
+                        as: "user2",
+                        attributes: ["userID", "firstName", "lastName"],
+                    },
+                ],
                 where: {
                     [Sequelize.Op.or]: [
-                        { userId1: userID },
-                        { userId2: userID },
+                        { userID1: userID },
+                        { userID2: userID },
                     ],
                 },
             });
-            console.log("Fetched Friends Info Successfully");
-            const incoming = [],
-                outgoing = [],
-                confirmed = [];
+
+            console.log("Fetched Friends Info Successfully", friends);
+
+            const incoming = [];
+            const outgoing = [];
+            const confirmed = [];
+
             friends.forEach((data) => {
-                const { userID1, userID2, isAccepted } = data;
+                const { userID1, isAccepted } = data;
                 if (isAccepted) {
-                    confirmed.push(userID1 == userID ? userID2 : userID1);
+                    confirmed.push(userID1 == userID ? data.user2 : data.user1);
                 } else if (userID1 == userID) {
-                    outgoing.push(userID2);
+                    outgoing.push(data.user2);
                 } else {
-                    incoming.push(userID1);
+                    incoming.push(data.user1);
                 }
             });
 
@@ -48,7 +63,7 @@ class FriendRepository {
             console.log("Friend Request Sent Successfully:", friend.toJSON());
             return friend;
         } catch (error) {
-            console.error("Error inserting friend:", error);
+            console.error("Error Sending Friend friend:", error);
             throw { error };
         }
     }
@@ -68,7 +83,7 @@ class FriendRepository {
             console.log("Friend Request Accepted Successfully");
             return result;
         } catch (error) {
-            console.error("Error Accepted friend request:", error);
+            console.error("Error Accepting friend request:", error);
             throw { error };
         }
     }
@@ -97,7 +112,9 @@ class FriendRepository {
             const { confirmed: friends } = friendsInfo;
 
             const leaderboard = await db.sequelize.query(query, {
-                replacements: { userIDs: [...friends, userID] },
+                replacements: {
+                    userIDs: [friends.map((friend) => friend.userID), userID],
+                },
                 type: Sequelize.QueryTypes.SELECT,
                 model: User,
             });

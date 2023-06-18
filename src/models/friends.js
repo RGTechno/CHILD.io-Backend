@@ -8,7 +8,19 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // define association here
+            Friends.belongsTo(models.User, {
+                foreignKey: "userID1",
+                as: "user1",
+                onUpdate: "CASCADE",
+                onDelete: "CASCADE",
+            });
+
+            Friends.belongsTo(models.User, {
+                foreignKey: "userID2",
+                as: "user2",
+                onUpdate: "CASCADE",
+                onDelete: "CASCADE",
+            });
         }
     }
     Friends.init(
