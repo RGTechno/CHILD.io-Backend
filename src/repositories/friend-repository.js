@@ -97,13 +97,13 @@ class FriendRepository {
                     lastName,
                     SUM(IF(DATE(ChildIncentives.createdAt) = CURDATE(), coinsEarned, 0)) AS points
                 FROM 
-                    ChildIncentives
-                JOIN 
-                    Users ON Users.userID = ChildIncentives.userID
+                    Users
+                LEFT JOIN 
+                    ChildIncentives ON Users.userID = ChildIncentives.userID
                 WHERE
-                    ChildIncentives.userID IN (:userIDs)
+                    Users.userID IN (:userIDs)
                 GROUP BY
-                    ChildIncentives.userID
+                    Users.userID
                 ORDER BY
                     points DESC;
             `;
@@ -113,7 +113,10 @@ class FriendRepository {
 
             const leaderboard = await db.sequelize.query(query, {
                 replacements: {
-                    userIDs: [friends.map((friend) => friend.userID), userID],
+                    userIDs: [
+                        ...friends.map((friend) => friend.userID),
+                        parseInt(userID),
+                    ],
                 },
                 type: Sequelize.QueryTypes.SELECT,
                 model: User,
