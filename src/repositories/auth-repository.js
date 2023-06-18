@@ -34,7 +34,7 @@ class AuthRepository {
             }
             console.log("Email/Password does not match");
             throw {
-                error: "Email/Password does not match",
+                message: "Email/Password does not match",
                 statusCode: StatusCodes.UNAUTHORIZED,
             };
         } catch (error) {
