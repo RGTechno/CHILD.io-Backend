@@ -16,7 +16,7 @@ async function incentiviseChild(req, res) {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
             error = {},
             message = "Something went wrong",
-        } = err;
+        } = err.error;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));
@@ -37,7 +37,7 @@ async function getChildren(req, res) {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
             error = {},
             message = "Something went wrong",
-        } = err;
+        } = err.error;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));

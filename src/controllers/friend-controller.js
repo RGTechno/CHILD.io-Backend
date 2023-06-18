@@ -18,7 +18,7 @@ async function getFriendsInfo(req, res) {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
             error = {},
             message = "Something went wrong",
-        } = err;
+        } = err.error;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));
@@ -42,7 +42,7 @@ async function sendFriendRequest(req, res) {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
             error = {},
             message = "Something went wrong",
-        } = err;
+        } = err.error;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));
@@ -70,7 +70,7 @@ async function acceptFriendRequest(req, res) {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
             error = {},
             message = "Something went wrong",
-        } = err;
+        } = err.error;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));

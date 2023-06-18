@@ -21,7 +21,26 @@ async function registerUser(req, res) {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
             error = {},
             message = "Something went wrong",
-        } = err;
+        } = err.error;
+        return res
+            .status(statusCode)
+            .json(new Response(false, message, {}, error));
+    }
+}
+
+async function loginUser(req, res) {
+    const { email, password } = req.body;
+    try {
+        const data = await authRepo.Login(email, password);
+        return res
+            .status(StatusCodes.OK)
+            .json(new Response(true, `Successfully Logged in`, data));
+    } catch (err) {
+        const {
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            error = {},
+            message = "Something went wrong",
+        } = err.error;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));
@@ -30,4 +49,5 @@ async function registerUser(req, res) {
 
 module.exports = {
     registerUser,
+    loginUser,
 };

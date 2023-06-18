@@ -18,7 +18,7 @@ async function linkParent(req, res) {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
             error = {},
             message = "Something went wrong",
-        } = err;
+        } = err.error;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));
@@ -37,7 +37,7 @@ async function getAppUsage(req, res) {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
             error = {},
             message = "Something went wrong",
-        } = err;
+        } = err.error;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));
@@ -56,7 +56,7 @@ async function updateAppUsage(req, res) {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
             error = {},
             message = "Something went wrong",
-        } = err;
+        } = err.error;
         return res
             .status(statusCode)
             .json(new Response(false, message, {}, error));
