@@ -1,6 +1,7 @@
 const { Sequelize, Op } = require("sequelize");
 const db = require("../models/index.js");
 const { StatusCodes } = require("http-status-codes");
+const { getCurrentDate } = require("../utils/date/date.js");
 
 const { User, Friends, ChildIncentive } = db;
 
@@ -95,7 +96,7 @@ class FriendRepository {
                     Users.userID AS userID, 
                     firstName,
                     lastName,
-                    SUM(IF(DATE(ChildIncentives.createdAt) = CURDATE(), coinsEarned, 0)) AS points
+                    SUM(IF(DATE(ChildIncentives.createdAt) = (:currentDate), coinsEarned, 0)) AS points
                 FROM 
                     Users
                 LEFT JOIN 
@@ -113,6 +114,7 @@ class FriendRepository {
 
             const leaderboard = await db.sequelize.query(query, {
                 replacements: {
+                    currentDate: getCurrentDate(),
                     userIDs: [
                         ...friends.map((friend) => friend.userID),
                         parseInt(userID),
