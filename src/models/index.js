@@ -1,5 +1,6 @@
 "use strict";
 
+const { Logger } = require("../config");
 const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
@@ -10,8 +11,13 @@ const config = require(__dirname + "/../config/config.json")[env];
 const db = {};
 
 let sequelize;
-if (config.use_env_variable) {
-    sequelize = new Sequelize(process.env[config.use_env_variable], config);
+if (process.env.NODE_ENV === "production") {
+    sequelize = new Sequelize(
+        process.env.DB_NAME,
+        process.env.DB_USERNAME,
+        process.env.DB_PASSWORD,
+        { ...config, port: 7446, host: "containers-us-west-26.railway.app" }
+    );
 } else {
     sequelize = new Sequelize(
         config.database,

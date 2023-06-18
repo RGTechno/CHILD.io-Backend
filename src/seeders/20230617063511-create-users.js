@@ -21,11 +21,11 @@ module.exports = {
         }
 
         // Insert the generated users into the 'users' table
-        await queryInterface.bulkInsert("users", users, {});
+        await queryInterface.bulkInsert("Users", users, {});
     },
 
     async down(queryInterface, Sequelize) {
         // Remove the inserted users from the 'users' table
-        await queryInterface.bulkDelete("users", null, {});
+        await queryInterface.bulkDelete("Users", null, {});
     },
 };
