@@ -1,7 +1,7 @@
 const { Sequelize, Op } = require("sequelize");
 const db = require("../models/index.js");
 const { StatusCodes } = require("http-status-codes");
-const { getCurrentDate } = require("../utils/date/date.js");
+const { date } = require("../utils/utils.js");
 
 const { User, Friends, ChildIncentive } = db;
 
@@ -114,7 +114,7 @@ class FriendRepository {
 
             const leaderboard = await db.sequelize.query(query, {
                 replacements: {
-                    currentDate: getCurrentDate(),
+                    currentDate: date.getCurrentDate(),
                     userIDs: [
                         ...friends.map((friend) => friend.userID),
                         parseInt(userID),

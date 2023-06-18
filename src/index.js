@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { json } = require("express");
-const { ServerConfig } = require("./config/index.js");
+const { ServerConfig } = require("./config");
 const apiRoutes = require("./routes/routes.js");
 
 const app = express();

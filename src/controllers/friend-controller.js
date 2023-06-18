@@ -1,5 +1,5 @@
 const { FriendRepository } = require("../repositories/repositories");
-const Response = require("../utils/response/response.js");
+const { Response } = require("../utils/utils.js");
 const { StatusCodes } = require("http-status-codes");
 
 const friendsRepo = new FriendRepository();

@@ -1,5 +1,5 @@
 const { ChildRepository } = require("../repositories/repositories.js");
-const Response = require("../utils/response/response.js");
+const { Response } = require("../utils/utils.js");
 const { StatusCodes } = require("http-status-codes");
 
 const childRepo = new ChildRepository();
@@ -67,13 +67,11 @@ async function getCoins(req, res) {
     const { userID } = req.query;
     try {
         const result = await childRepo.getCoins(userID);
-        return res
-            .status(StatusCodes.OK)
-            .json(
-                new Response(true, `Successfully Fetched Coins`, {
-                    coins: result,
-                })
-            );
+        return res.status(StatusCodes.OK).json(
+            new Response(true, `Successfully Fetched Coins`, {
+                coins: result,
+            })
+        );
     } catch (err) {
         const {
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,

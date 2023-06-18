@@ -1,5 +1,5 @@
 const { AuthRepository } = require("../repositories/repositories.js");
-const Response = require("../utils/response/response.js");
+const { Response } = require("../utils/utils.js");
 const { StatusCodes } = require("http-status-codes");
 
 const authRepo = new AuthRepository();

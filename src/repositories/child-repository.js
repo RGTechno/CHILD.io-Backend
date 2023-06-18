@@ -2,7 +2,7 @@ const { Op, Sequelize } = require("sequelize");
 const db = require("../models/index.js");
 const { StatusCodes } = require("http-status-codes");
 const Logger = require("../config/logger-config.js");
-const { getCurrentDate } = require("../utils/date/date.js");
+const { date } = require("../utils/utils.js");
 
 const { User, DailyActivity, ChildIncentive } = db;
 
@@ -37,7 +37,7 @@ class ChildRepository {
                 where: {
                     userID,
                     activityDate: {
-                        [Op.eq]: getCurrentDate(),
+                        [Op.eq]: date.getCurrentDate(),
                     },
                 },
             });
