@@ -35,5 +35,8 @@ module.exports = (sequelize, DataTypes) => {
             modelName: "User",
         }
     );
+    User.associate = (models) => {
+        User.hasMany(models.ChildIncentive, { foreignKey: "userID" });
+    };
     return User;
 };

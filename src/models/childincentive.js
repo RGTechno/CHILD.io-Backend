@@ -37,5 +37,8 @@ module.exports = (sequelize, DataTypes) => {
             timestamps: false, // Optional: If you don't need Sequelize to handle timestamps for this model
         }
     );
+    ChildIncentive.associate = (models) => {
+        ChildIncentive.belongsTo(models.User, { foreignKey: "userID" });
+    };
     return ChildIncentive;
 };

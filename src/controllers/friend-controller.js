@@ -77,8 +77,30 @@ async function acceptFriendRequest(req, res) {
     }
 }
 
+async function getLeaderboard(req, res) {
+    const { userID } = req.query;
+    try {
+        const result = await friendsRepo.getLeaderBoard(userID);
+        return res
+            .status(StatusCodes.OK)
+            .json(
+                new Response(true, "Leaderboard Fetched Successfully", result)
+            );
+    } catch (err) {
+        const {
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            error = {},
+            message = "Something went wrong",
+        } = err?.error;
+        return res
+            .status(statusCode)
+            .json(new Response(false, message, {}, error));
+    }
+}
+
 module.exports = {
     getFriendsInfo,
     sendFriendRequest,
     acceptFriendRequest,
+    getLeaderboard,
 };

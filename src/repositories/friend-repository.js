@@ -1,7 +1,8 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 const db = require("../models/index.js");
+const { StatusCodes } = require("http-status-codes");
 
-const { Friends } = db;
+const { User, Friends, ChildIncentive } = db;
 
 class FriendRepository {
     async getFriendsInfo(userID) {
@@ -69,6 +70,42 @@ class FriendRepository {
         } catch (error) {
             console.error("Error Accepted friend request:", error);
             throw { error };
+        }
+    }
+
+    async getLeaderBoard(userID) {
+        try {
+            const query = `
+                SELECT 
+                    Users.userID AS userID, 
+                    firstName,
+                    lastName,
+                    SUM(IF(DATE(ChildIncentives.createdAt) = CURDATE(), coinsEarned, 0)) AS points
+                FROM 
+                    ChildIncentives
+                JOIN 
+                    Users ON Users.userID = ChildIncentives.userID
+                WHERE
+                    ChildIncentives.userID IN (:userIDs)
+                GROUP BY
+                    ChildIncentives.userID
+                ORDER BY
+                    points DESC;
+            `;
+
+            const friendsInfo = await this.getFriendsInfo(userID);
+            const { confirmed: friends } = friendsInfo;
+
+            const leaderboard = await db.sequelize.query(query, {
+                replacements: { userIDs: [...friends, userID] },
+                type: Sequelize.QueryTypes.SELECT,
+                model: User,
+            });
+
+            return leaderboard;
+        } catch (error) {
+            console.error("Error Fetching Leaderboard:", error);
+            throw { message: "Error Fetching Leaderboard" };
         }
     }
 }
