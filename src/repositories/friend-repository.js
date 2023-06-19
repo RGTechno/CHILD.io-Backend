@@ -56,6 +56,65 @@ class FriendRepository {
 
     async sendFriendRequest(senderUserID, receiverUserID) {
         try {
+            const validateRequest = async () => {
+                if (senderUserID == receiverUserID) {
+                    throw {
+                        message: "You can't send request to yourself :(",
+                        statusCode: StatusCodes.BAD_REQUEST,
+                    };
+                }
+
+                const result = await Friends.findAll({
+                    where: {
+                        [Sequelize.Op.or]: [
+                            {
+                                [Sequelize.Op.and]: [
+                                    { userID1: senderUserID },
+                                    { userID2: receiverUserID },
+                                ],
+                            },
+                            {
+                                [Sequelize.Op.and]: [
+                                    { userID1: receiverUserID },
+                                    { userID2: senderUserID },
+                                ],
+                            },
+                        ],
+                    },
+                });
+
+                if (result.length === 0) {
+                    return;
+                }
+
+                const { dataValues: data } = result[0];
+                const { userID1, userID2, isAccepted } = data;
+
+                if (isAccepted) {
+                    throw {
+                        message: "You are already friends",
+                        statusCode: StatusCodes.BAD_REQUEST,
+                    };
+                }
+
+                if (userID1 === senderUserID) {
+                    throw {
+                        message:
+                            "You have already sent the Friend Request to this user",
+                        statusCode: StatusCodes.BAD_REQUEST,
+                    };
+                }
+
+                if (userID2 === senderUserID) {
+                    throw {
+                        message: "This user has already sent you the request!",
+                        statusCode: StatusCodes.BAD_REQUEST,
+                    };
+                }
+            };
+
+            await validateRequest();
+
             const friend = await Friends.create({
                 userID1: senderUserID,
                 userID2: receiverUserID,
