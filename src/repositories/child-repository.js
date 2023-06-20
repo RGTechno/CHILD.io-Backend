@@ -72,7 +72,7 @@ class ChildRepository {
                     userID,
                 },
             });
-            console.log("Data inserted or updated successfully.");
+            console.log("Data inserted successfully.");
             return result;
         } catch (error) {
             console.log(error);
